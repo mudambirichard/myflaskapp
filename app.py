@@ -1,7 +1,7 @@
-from flask import Flask , render_template, flash, redirect, url_for, session, register, logging
+from flask import Flask , render_template,  flash, redirect, url_for, session, request, logging
 from data import Articles
 from flask_mysqldb import MySQL
-from wtforms import Form, stringField, TextAreaField, PasswordField, validators
+from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from passlib.hash import sha256_crypt
 
 app = Flask(__name__)
@@ -34,13 +34,14 @@ class RegisterForm(Form):
 		])
 	confirm = PasswordField('Confirm Password')
 
-@app.route('/register', method=['GET', 'POST'])
+
+@app.route('/register', methods=['GET', 'POST'])
 def register():
 	form = RegisterForm(request.form)
 	if request.method == 'POST' and form.validate():
 		return render_template('register.html')
+        return render_template('register.html', form=form)
 
-    return render_template('register.html', form=form)
 
 if __name__ == '__main__':
 	app.run(debug=True)
