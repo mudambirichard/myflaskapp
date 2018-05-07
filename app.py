@@ -116,13 +116,13 @@ def login():
 
 			else:
 				error = 'Invalid login'
-	    	return render_template('login.html',error=error)
+	    	return render_template('login.html', error=error)
             #close conection
                 cur.close()
 
 	       # else:
                 error = 'Username not found'
-	    	return render_template('login.html',error=error)
+	    	return render_template('login.html', error=error)
 
         return render_template('login.html')
 
@@ -138,6 +138,36 @@ def logout():
 @is_logged_in
 def dashboard():
  	return render_template('dashboard.html')
+
+#Add Article
+class ArticleForm(Form):
+	title = StringField('Title', [validators.Length(min=1, max=200)])
+	body = TextAreaField('Body', [validators.Length(min=30)])
+
+#Add Article
+@app.route('/add_article', methods=['GET', 'POST'])
+@is_logged_in
+def add_articles():
+	form = ArticleForm(request.form)
+	if request.method == 'POST' and form.validate():
+		title = form.title.data
+		body = form.body.data
+		#Create Cursor
+		cur = mysql.connection.cursor()
+		#execute
+		cur.execute("INSERT INTO articles(title, body, author) VALUES(%s, %s, %s)", (title, body, session['username']))
+		#Commit to Db
+		mysql.connection.commit()
+
+		#Close connection
+		cursor.close()
+
+		flash('Article Created', 'success')
+
+		return redirect(url_for('dashboard'))
+	return render_template('add_article.html', form=form)
+
+
  
 
 if __name__ == '__main__':
