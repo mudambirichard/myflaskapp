@@ -5,6 +5,11 @@
 <div class="jumbotron text-center">
 <h1>Welcome To Andela</h1>
 <p class="lead">This is the movement born in Africa to uplift the techonlogy country wide.</p>
+{% if session.logged_in == NULL %}
+<a href="/register" class="btn btn-primary btn-lg">Register</a>
+<a href="/login" class="btn btn-success btn-lg">Login</a>
+{% endif %}
+
 	
 </div>
 
